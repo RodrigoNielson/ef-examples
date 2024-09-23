@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    volumes:
+      - ./data:/initdb
+    container_name: mssql-ef-examples
+    ports:
+        - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=SqlPass123!
+      - MSSQL_PID=Developer
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    ports:
+        - 9443:9443
+    volumes:
+      - portainer_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    networks:
+      - portainer
+
+networks:
+  portainer:
+    driver: bridge
+
+volumes:
+  mssql:
+  portainer_data:
